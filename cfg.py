@@ -41,24 +41,32 @@ class CFG:
     train_folder = os.path.join(folder, "train/")
     val_folder = os.path.join(folder, "test/")
     test_folder = os.path.join(folder, "test/")
+
     batch_size = 32
     epochs = 30
-    plot_image_at_begin = True
+
+    plot_image_at_begin = False
+
     model = HotdogClassifier()
     model_name = model.__class__.__name__
     model_folder = model.__class__.__name__ + "/"
     save_model_path = model_folder + "model.pt"
+
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
     loss_fn = torch.nn.BCEWithLogitsLoss()
+
     early_stopper = EarlyStopping(patience=10, path=save_model_path, verbose=True)
     lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer=optimizer, mode="min", factor=0.1, patience=3
     )
+
     train_dataset, val_dataset, test_dataset = get_datasets(
         train_folder, val_folder, test_folder
     )
     class_names = train_dataset.classes
+
     train_dataloader, val_dataloader, test_dataloader = get_dataloader(
         train_dataset, val_dataset, test_dataset, batch_size
     )
+    
     device = "cuda" if torch.cuda.is_available() else "cpu"
