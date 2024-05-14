@@ -45,7 +45,7 @@ class CFG:
     batch_size = 32
     epochs = 30
 
-    plot_image_at_begin = False
+    plot_image_at_begin = True
 
     model = HotdogClassifier()
     model_name = model.__class__.__name__
@@ -68,5 +68,5 @@ class CFG:
     train_dataloader, val_dataloader, test_dataloader = get_dataloader(
         train_dataset, val_dataset, test_dataset, batch_size
     )
-    
+
     device = "cuda" if torch.cuda.is_available() else "cpu"

@@ -125,4 +125,5 @@ def plot_loss_curves(results: dict[str, list[float]], model_folder):
 
     save_path = os.path.join(model_folder, "training_curves.png")
     plt.savefig(save_path)
+    plt.show()
     plt.close()

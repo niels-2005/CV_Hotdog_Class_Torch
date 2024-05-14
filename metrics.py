@@ -99,6 +99,7 @@ def plot_metrics(model, dataloader, dataset, class_names, device, model_folder):
     plt.title(f"Confusion Matrix: {model.__class__.__name__}")
     plot_path = os.path.join(model_folder, "confusion_matrix.png")
     plt.savefig(plot_path)
+    plt.show()
     plt.close()
 
     return y_pred, y_true
