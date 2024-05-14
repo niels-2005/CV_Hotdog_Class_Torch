@@ -27,11 +27,11 @@ def start_pipeline():
         os.makedirs(CFG.model_folder)
 
     if CFG.plot_image_at_begin:
-        plot_images_from_folder(folder=CFG.train_folder)
-        plot_images_from_folder(folder=CFG.test_folder)
+        plot_images_from_folder(folder=CFG.train_folder, n_images=4, images_per_row=4)
+        plot_images_from_folder(folder=CFG.test_folder, n_images=4, images_per_row=4)
 
         plot_images_from_dataloader(
-            dataloader=CFG.train_dataloader, class_names=CFG.class_names
+            dataloader=CFG.train_dataloader, class_names=CFG.class_names, n_images=4, images_per_row=4
         )
 
     results, df = train_model(
