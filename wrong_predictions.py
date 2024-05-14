@@ -1,7 +1,9 @@
+import os
+
 import matplotlib.image as mpimg
-import pandas as pd 
-import matplotlib.pyplot as plt 
-import os 
+import matplotlib.pyplot as plt
+import pandas as pd
+
 
 def plot_wrong_predictions(
     wrong_predictions: pd.DataFrame,
@@ -82,7 +84,7 @@ def get_evaluation_dataframes(y_pred, y_true, dataset, class_names, model_folder
         "y_true": y_true,
         "y_pred": y_pred,
         "y_true_classname": [class_names[i] for i in y_true],
-        "y_pred_classname": [class_names[i] for i in y_pred]
+        "y_pred_classname": [class_names[i] for i in y_pred],
     }
 
     pred_df = pd.DataFrame(df_dict)

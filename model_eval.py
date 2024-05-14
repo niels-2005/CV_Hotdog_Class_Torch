@@ -1,8 +1,11 @@
-import torch
-import pandas as pd
-import matplotlib.pyplot as plt
-from cfg import CFG 
 import os
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import torch
+
+from cfg import CFG
+
 
 def accuracy_fn(y_true, y_logits):
     """Calculates accuracy for binary classification.
@@ -26,7 +29,7 @@ def eval_model(
     loss_fn: torch.nn.Module,
     df: pd.DataFrame,
     model_folder,
-    device
+    device,
 ):
     """Evaluates a given model on a given dataset.
 

@@ -1,10 +1,12 @@
+import os
+
+from cfg import CFG
+from metrics import plot_metrics
+from model_eval import eval_model, plot_loss_curves
 from plot_images import plot_images_from_dataloader, plot_images_from_folder
 from training import train_model
-from model_eval import plot_loss_curves, eval_model
-from metrics import plot_metrics
 from wrong_predictions import get_evaluation_dataframes
-import os
-from cfg import CFG
+
 
 def start_pipeline():
     """
@@ -28,27 +30,46 @@ def start_pipeline():
         plot_images_from_folder(folder=CFG.train_folder)
         plot_images_from_folder(folder=CFG.test_folder)
 
-        plot_images_from_dataloader(dataloader=CFG.train_dataloader, class_names=CFG.class_names)
+        plot_images_from_dataloader(
+            dataloader=CFG.train_dataloader, class_names=CFG.class_names
+        )
 
-    results, df = train_model(model=CFG.model, 
-                              train_dataloader=CFG.train_dataloader, 
-                              val_dataloader=CFG.val_dataloader, 
-                              optimizer=CFG.optimizer,
-                              loss_fn=CFG.loss_fn,
-                              early_stopper=CFG.early_stopper,
-                              lr_scheduler=CFG.lr_scheduler,
-                              epochs=CFG.epochs,
-                              device=CFG.device)
-    
+    results, df = train_model(
+        model=CFG.model,
+        train_dataloader=CFG.train_dataloader,
+        val_dataloader=CFG.val_dataloader,
+        optimizer=CFG.optimizer,
+        loss_fn=CFG.loss_fn,
+        early_stopper=CFG.early_stopper,
+        lr_scheduler=CFG.lr_scheduler,
+        epochs=CFG.epochs,
+        device=CFG.device,
+    )
+
     plot_loss_curves(results=results, model_folder=CFG.model_folder)
 
-    eval_model(model=CFG.model, dataloader=CFG.test_dataloader, loss_fn=CFG.loss_fn, df=df, device=CFG.device, model_folder=CFG.model_folder)
+    eval_model(
+        model=CFG.model,
+        dataloader=CFG.test_dataloader,
+        loss_fn=CFG.loss_fn,
+        df=df,
+        device=CFG.device,
+        model_folder=CFG.model_folder,
+    )
 
-    y_pred, y_true = plot_metrics(model=CFG.model, dataloader=CFG.test_dataloader, dataset=CFG.test_dataset, class_names=CFG.class_names, device=CFG.device, model_folder=CFG.model_folder)
+    y_pred, y_true = plot_metrics(
+        model=CFG.model,
+        dataloader=CFG.test_dataloader,
+        dataset=CFG.test_dataset,
+        class_names=CFG.class_names,
+        device=CFG.device,
+        model_folder=CFG.model_folder,
+    )
 
-    get_evaluation_dataframes(y_pred=y_pred, y_true=y_true, dataset=CFG.test_dataset, class_names=CFG.class_names, model_folder=CFG.model_folder)
-
-
-
-    
-
+    get_evaluation_dataframes(
+        y_pred=y_pred,
+        y_true=y_true,
+        dataset=CFG.test_dataset,
+        class_names=CFG.class_names,
+        model_folder=CFG.model_folder,
+    )

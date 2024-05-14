@@ -1,7 +1,8 @@
-import torch 
 import numpy as np
+import torch
 
 # EarlyStopping Callback for PyTorch
+
 
 class EarlyStopping:
     """Early stops the training if validation loss doesn't improve after a given patience."""

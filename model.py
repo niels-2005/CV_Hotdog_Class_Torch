@@ -1,4 +1,4 @@
-import timm 
+import timm
 from torch import nn
 
 
@@ -19,4 +19,3 @@ class HotdogClassifier(nn.Module):
         x = self.features(x)
         output = self.classifier(x)
         return output
-

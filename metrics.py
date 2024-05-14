@@ -1,12 +1,15 @@
-from sklearn.metrics import classification_report 
+import os
+
+import matplotlib.pyplot as plt
+import pandas as pd
 import torch
 from mlxtend.plotting import plot_confusion_matrix
+from sklearn.metrics import classification_report
 from torchmetrics import ConfusionMatrix
 from tqdm.notebook import tqdm
-import matplotlib.pyplot as plt
+
 from cfg import CFG
-import os
-import pandas as pd
+
 
 def get_y_pred_binary(model, test_loader, device):
     """Generates predictions for a binary classification model on a given test dataset.
@@ -80,7 +83,9 @@ def plot_metrics(model, dataloader, dataset, class_names, device, model_folder):
     y_pred = get_y_pred_binary(model=model, test_loader=dataloader, device=device)
     y_true = get_y_true(dataset=dataset)
 
-    get_classes_metrics(y_true=y_true, y_pred=y_pred, class_names=class_names, model_folder=model_folder)
+    get_classes_metrics(
+        y_true=y_true, y_pred=y_pred, class_names=class_names, model_folder=model_folder
+    )
 
     confmat = ConfusionMatrix(num_classes=2, task="binary")
     confmat_tensor = confmat(preds=y_pred, target=y_true)

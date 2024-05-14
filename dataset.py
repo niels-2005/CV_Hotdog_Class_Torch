@@ -1,6 +1,7 @@
-from torch.utils.data import DataLoader, Dataset 
-from torchvision.datasets import ImageFolder 
+from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
+from torchvision.datasets import ImageFolder
+
 
 class ImageDataset(Dataset):
     """Custom Dataset for loading images from a directory.
@@ -19,6 +20,7 @@ class ImageDataset(Dataset):
         classes: Property to get the class names.
         get_filepaths(): Returns the list of file paths for each image.
     """
+
     def __init__(self, data_dir, transform=None):
         self.data = ImageFolder(data_dir, transform=transform)
         self.filepaths = [s[0] for s in self.data.samples]
@@ -32,10 +34,10 @@ class ImageDataset(Dataset):
     @property
     def classes(self):
         return self.data.classes
-    
+
     def get_filepaths(self):
         return self.filepaths
-    
+
 
 def get_datasets(train_folder, val_folder, test_folder):
     """Creates datasets for training, validation, and testing.
@@ -56,18 +58,24 @@ def get_datasets(train_folder, val_folder, test_folder):
         )
     """
     # Train Augmentations if needed
-    train_transform = transforms.Compose([
-    transforms.Resize((224, 224)),  
-    transforms.RandomHorizontalFlip(),  
-    transforms.RandomRotation(15),  
-    transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),  
-    transforms.ToTensor(),  
-    ])
+    train_transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomRotation(15),
+            transforms.ColorJitter(
+                brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1
+            ),
+            transforms.ToTensor(),
+        ]
+    )
 
-    test_transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-    ])
+    test_transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+        ]
+    )
 
     # Datasets
     train_dataset = ImageDataset(data_dir=train_folder, transform=train_transform)
@@ -99,6 +107,3 @@ def get_dataloader(train_dataset, val_dataset, test_dataset, batch_size):
     test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     return train_dataloader, val_dataloader, test_dataloader
-
-
-

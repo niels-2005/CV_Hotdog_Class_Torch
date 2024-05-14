@@ -1,6 +1,6 @@
-import torch 
-from tqdm.notebook import tqdm
 import pandas as pd
+import torch
+from tqdm.notebook import tqdm
 
 
 def accuracy_fn(y_true, y_logits):
@@ -13,9 +13,7 @@ def accuracy_fn(y_true, y_logits):
     Returns:
         float: Accuracy value between y_true and y_pred, e.g., 78.45.
     """
-    y_pred = (
-        torch.sigmoid(y_logits) >= 0.5
-    ) 
+    y_pred = torch.sigmoid(y_logits) >= 0.5
     correct = torch.eq(y_true, y_pred).sum().item()
     acc = (correct / len(y_pred)) * 100
     return acc
@@ -31,7 +29,7 @@ def get_current_lr(optimizer):
         float: The current learning rate.
     """
     for param_group in optimizer.param_groups:
-        return param_group['lr']
+        return param_group["lr"]
 
 
 def train_step(model, dataloader, loss_fn, optimizer, device):
@@ -51,7 +49,7 @@ def train_step(model, dataloader, loss_fn, optimizer, device):
     model.to(device)
     model.train()
     for batch, (X, y) in enumerate(dataloader):
-        X, y = X.to(device), y.to(device).unsqueeze(1).float()  
+        X, y = X.to(device), y.to(device).unsqueeze(1).float()
 
         # Forward pass
         y_logits = model(X)
@@ -88,7 +86,7 @@ def val_step(dataloader, model, loss_fn, device):
     model.eval()
     with torch.inference_mode():
         for X, y in dataloader:
-            X, y = X.to(device), y.to(device).unsqueeze(1).float()  
+            X, y = X.to(device), y.to(device).unsqueeze(1).float()
             y_logits = model(X)
             val_loss += loss_fn(y_logits, y).item()
             val_acc += accuracy_fn(y, y_logits)
@@ -109,7 +107,6 @@ def train_model(
     device,
     return_df: bool = True,
     epochs: int = 5,
-
 ):
     """Trains a model with callbacks for early stopping and learning rate scheduling.
 
@@ -144,7 +141,13 @@ def train_model(
         )
     """
     # 2. Create empty results dictionary
-    results = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [], "lr": []}
+    results = {
+        "train_loss": [],
+        "train_acc": [],
+        "val_loss": [],
+        "val_acc": [],
+        "lr": [],
+    }
 
     initial_lr = get_current_lr(optimizer)
 
@@ -155,7 +158,7 @@ def train_model(
             dataloader=train_dataloader,
             loss_fn=loss_fn,
             optimizer=optimizer,
-            device=device
+            device=device,
         )
         val_loss, val_acc = val_step(
             model=model, dataloader=val_dataloader, loss_fn=loss_fn, device=device
@@ -169,7 +172,6 @@ def train_model(
         results["val_loss"].append(val_loss)
         results["val_acc"].append(val_acc)
         results["lr"].append(current_lr)
-
 
         # 5. Print out what's happening
         print(
@@ -187,7 +189,7 @@ def train_model(
         # 7. Check Early Stopping
         early_stopper(val_loss, model)
         if early_stopper.early_stop:
-            early_stopped_epoch = epoch+1
+            early_stopped_epoch = epoch + 1
             print(f"Early Stopping at Epoch: {epoch+1}")
             break
 
@@ -197,16 +199,16 @@ def train_model(
         df_results = {
             "Model": model.__class__.__name__,
             "Best Model Path": early_stopper.path,
-            "Original Epochs": epochs, 
+            "Original Epochs": epochs,
             "Early Stopped Epoch": early_stopped_epoch,
             "Optimizer": optimizer.__class__.__name__,
             "Loss Function": loss_fn.__class__.__name__,
             "initial_lr": initial_lr,
-            "final_lr": min(results["lr"]),   
+            "final_lr": min(results["lr"]),
             "train_loss": min(results["train_loss"]),
             "train_acc": max(results["train_acc"]),
             "val_loss": min(results["val_loss"]),
-            "val_acc": max(results["val_acc"]),  
+            "val_acc": max(results["val_acc"]),
         }
         df = pd.DataFrame([df_results])
         return results, df
