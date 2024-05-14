@@ -110,7 +110,7 @@ def plot_loss_curves(results: dict[str, list[float]], model_folder):
     # Plot loss
     plt.subplot(1, 2, 1)
     plt.plot(epochs, loss, label="train_loss")
-    plt.plot(epochs, test_loss, label="test_loss")
+    plt.plot(epochs, test_loss, label="val_loss")
     plt.title("Loss")
     plt.xlabel("Epochs")
     plt.legend()
@@ -118,7 +118,7 @@ def plot_loss_curves(results: dict[str, list[float]], model_folder):
     # Plot accuracy
     plt.subplot(1, 2, 2)
     plt.plot(epochs, accuracy, label="train_accuracy")
-    plt.plot(epochs, test_accuracy, label="test_accuracy")
+    plt.plot(epochs, test_accuracy, label="val_accuracy")
     plt.title("Accuracy")
     plt.xlabel("Epochs")
     plt.legend()
