@@ -1,7 +1,7 @@
 import pandas as pd
 import torch
 from tqdm.notebook import tqdm
-
+import os
 
 def accuracy_fn(y_true, y_logits):
     """Calculates accuracy for binary classification.
@@ -105,6 +105,7 @@ def train_model(
     early_stopper,
     lr_scheduler,
     device,
+    model_folder,
     return_df: bool = True,
     epochs: int = 5,
 ):
@@ -211,6 +212,9 @@ def train_model(
             "val_acc": max(results["val_acc"]),
         }
         df = pd.DataFrame([df_results])
+        df_results_complete = pd.DataFrame([results])
+        csv_path = os.path.join(model_folder, "train_results.csv")
+        df_results_complete.to_csv(csv_path, index=False)
         return results, df
     else:
         return results
